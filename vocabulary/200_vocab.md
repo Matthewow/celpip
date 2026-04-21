@@ -1,4 +1,4 @@
-# CELPIP Vocabulary Full List (Cleaned)
+# CELPIP Vocabulary Full List
 
 1. Abrupt:
 a. (adjective) sudden; out of the blue

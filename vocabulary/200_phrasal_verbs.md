@@ -1,4 +1,4 @@
-# CELPIP Phrasal Verbs Full List (Cleaned)
+# CELPIP Phrasal Verbs Full List
 
 1. Aim At
 To point at a specific target
