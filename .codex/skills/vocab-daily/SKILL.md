@@ -63,10 +63,13 @@ Keep each entry brief. The sheet is for fast daily study, not deep dictionary-st
 Preferred entry format:
 
 ```md
-- **word / phrase**: short meaning
+1. **word / phrase**: short meaning
+  - Explanation: short meaning and usage in simple English.
+  - 中文意思: short Chinese support for the meaning.
+  - 中文语感: short Chinese support for nuance or usage when helpful.
+  - Usage note: only when needed.
   - Examples:
     - one natural CELPIP-style sentence.
-  - Usage note: only when needed.
 ```
 
 When an entry later gets guided-study notes, extend the same entry instead of creating a separate document.
@@ -137,19 +140,27 @@ For each word:
 1. prompt the word or phrase first
 2. ask the user for a confidence rating from `0` to `3`
 3. adapt the response based on the rating
-4. give the explanation, nuance, and example sentences together in one response
-5. continue refining only if the user says they still need help
-6. persist the explanation and useful examples into the day markdown before moving to the next word
+4. give the explanation, nuance, and example sentences together in one response, with explanation and nuance before examples
+5. include a short Chinese section for the meaning and nuance in the live teaching response
+6. continue refining only if the user says they still need help
+7. persist the explanation and useful examples into the day markdown before moving to the next word
+
+Chinese support rules:
+- add `中文意思:` after the main English meaning/explanation
+- add `中文语感:` after the nuance or usage distinction when nuance is given
+- keep both Chinese parts brief, natural, and practical
+- use Chinese only as learning support; the main teaching should still be English-first
+- for rating `3`, Chinese can be minimal and only included if it helps clarify a subtle distinction
 
 Rating behavior:
-- `0`: assume the user does not know the word; give a very simple meaning, plain-language explanation, common context, and one easy contrast or synonym if helpful
-- `1`: assume partial recognition; give a concise explanation focused on usage and a common context
-- `2`: assume the user mostly knows it; focus on nuance, collocations, and when to choose this word over a simpler one
+- `0`: assume the user does not know the word; give a very simple meaning, plain-language explanation, a brief `中文意思`, common context, and one easy contrast or synonym if helpful
+- `1`: assume partial recognition; give a concise explanation focused on usage, a brief `中文意思`, and a common context
+- `2`: assume the user mostly knows it; focus on nuance, collocations, when to choose this word over a simpler one, and add a brief `中文语感`
 - `3`: assume the user has mastered it; keep the explanation minimal, give only one example, and save the word directly once the user confirms they are good
 
 Conversation pattern:
 - first turn for a word: show only the word or phrase and ask for the `0-3` rating
-- second turn: provide the explanation matched to the rating, plus nuance and examples together
+- second turn: provide the explanation matched to the rating, then the nuance, then the examples; include the short Chinese support for meaning and nuance when applicable
 - for rating `3`, do not expand into a longer teaching loop; one example is enough before saving
 - for rating `0`, `1`, or `2`, once that teaching response has been shown, the user may either respond in natural language or type `1` as a shortcut meaning "save this word and go to the next one"
 - if the user still feels unsure, give one more simpler explanation or one more example, not a full essay
@@ -170,11 +181,13 @@ Persistence rules:
 Use this structure under each studied entry:
 
 ```md
-- **word / phrase (3)**: short meaning
+1. **word / phrase (3)**: short meaning
+  - Explanation: the clearest explanation that helped the user.
+  - 中文意思: short Chinese support for the meaning.
+  - 中文语感: short Chinese support for nuance or usage when helpful.
   - Examples:
     - original sheet example.
   - Usage note: only when needed.
-  - Explanation: the clearest explanation that helped the user.
 ```
 
 Persistence content:
@@ -183,9 +196,17 @@ Persistence content:
 - keep wording concise and practical
 - when the user changes their confidence during study, persist the latest rating directly after the word, for example `blurry (3)`
 - keep all example sentences under the same `Examples` field; do not split them into `Example` and `Extra examples`
+- save the Chinese support lines by default when guided-study responses included them
+- save `中文意思` for every completed word studied with Chinese support
+- save `中文语感` when a nuance, contrast, or usage distinction was taught and it adds real learning value
+- keep the Chinese lines short and practical; do not turn the sheet into a long bilingual dictionary
+- when both explanation/nuance and examples are present, persist the explanation and Chinese support lines before the `Examples` section
+- number the word entries within each section as `1. 2. 3. ...`; do not number the internal notes under each word
 
 Teaching style:
 - use simple English first
+- add short Chinese support only for meaning and nuance, not for every sentence
+- present explanation and nuance before examples in both the live response and saved notes
 - keep examples practical and CELPIP-friendly
 - prefer everyday contexts: work, school, housing, services, travel, opinions, scheduling, and problem solving
 - avoid dictionary-heavy or overly academic explanations
