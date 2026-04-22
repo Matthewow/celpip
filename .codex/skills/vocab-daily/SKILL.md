@@ -162,21 +162,25 @@ Conversation pattern:
 - first turn for a word: show only the word or phrase and ask for the `0-3` rating
 - second turn: provide the explanation matched to the rating, then the nuance, then the examples; include the short Chinese support for meaning and nuance when applicable
 - for rating `3`, do not expand into a longer teaching loop; one example is enough before saving
-- for rating `0`, `1`, or `2`, once that teaching response has been shown, the user may either respond in natural language or type `1` as a shortcut meaning "save this word and go to the next one"
+- for rating `0`, `1`, or `2`, once that teaching response has been shown, the user may either respond in natural language or type `1` as a shortcut meaning "mark this word complete and go to the next one without persisting yet"
 - if the user still feels unsure, give one more simpler explanation or one more example, not a full essay
 - once the user feels good, mark the word complete and move to the next entry
 
 Input handling:
 - at the start of a word, interpret `0`, `1`, `2`, `3` as the confidence rating only
-- after the explanation-plus-examples response has been shown for a `0`, `1`, or `2` word, interpret a standalone `1` as "save and continue to the next word"
-- before that teaching response is shown, do not treat `1` as "save and continue"; it only means the confidence rating if the agent is still at the initial rating prompt
+- after the explanation-plus-examples response has been shown for a `0`, `1`, or `2` word, interpret a standalone `1` as "complete and continue to the next word"
+- before that teaching response is shown, do not treat `1` as "complete and continue"; it only means the confidence rating if the agent is still at the initial rating prompt
+- interpret a standalone `save` as "persist all completed-but-not-yet-saved words to the day markdown now"
+- after a word is completed with `1`, continue immediately to the next word instead of writing the file first unless the user explicitly types `save`
 
 Persistence rules:
-- update the same `day_XX.md` file after each completed word, not only at the end
+- maintain an in-session buffer of completed words that are ready to be persisted
+- update the same `day_XX.md` file only when the user explicitly types `save`, unless the user asks for immediate saving
 - preserve existing sections and source order
 - do not remove the original short meaning/example from the generated sheet
 - append guided-study notes under the current entry
 - if guided-study notes already exist for that entry, update them instead of duplicating them
+- when saving buffered words, write all pending completed entries in one batch
 
 Use this structure under each studied entry:
 
@@ -202,6 +206,7 @@ Persistence content:
 - keep the Chinese lines short and practical; do not turn the sheet into a long bilingual dictionary
 - when both explanation/nuance and examples are present, persist the explanation and Chinese support lines before the `Examples` section
 - number the word entries within each section as `1. 2. 3. ...`; do not number the internal notes under each word
+- if the session ends before `save`, keep the unsaved progress in the conversation state for the current turn, but do not claim it has been written to disk
 
 Teaching style:
 - use simple English first
