@@ -28,14 +28,24 @@ Save generated study sheets here:
 When the user asks for a daily vocab sheet, determine the day number `N` and generate one saved file for that day.
 
 Selection rules:
-- From `400_words.md`, use items `(N-1)*40 + 1` through `N*40`
-- From `200_vocab.md`, use items `(N-1)*20 + 1` through `N*20`
-- From `200_phrasal_verbs.md`, use items `(N-1)*20 + 1` through `N*20`
+- Use a sequential 20-day plan instead of mixing all three source files into the same day
+- Days `1-10`: use only `400_words.md`, `40` items per day
+- Days `11-15`: use only `200_vocab.md`, `40` items per day
+- Days `16-20`: use only `200_phrasal_verbs.md`, `40` items per day
+
+Per-day ranges:
+- If `N` is `1-10`, select items `(N-1)*40 + 1` through `N*40` from `400_words.md`
+- If `N` is `11-15`, let `M = N-10`, then select items `(M-1)*40 + 1` through `M*40` from `200_vocab.md`
+- If `N` is `16-20`, let `M = N-15`, then select items `(M-1)*40 + 1` through `M*40` from `200_phrasal_verbs.md`
 
 Examples:
-- Day 1: `1-40`, `1-20`, `1-20`
-- Day 2: `41-80`, `21-40`, `21-40`
-- Day 10: `361-400`, `181-200`, `181-200`
+- Day 1: `400_words.md` items `1-40`
+- Day 2: `400_words.md` items `41-80`
+- Day 10: `400_words.md` items `361-400`
+- Day 11: `200_vocab.md` items `1-40`
+- Day 15: `200_vocab.md` items `161-200`
+- Day 16: `200_phrasal_verbs.md` items `1-40`
+- Day 20: `200_phrasal_verbs.md` items `161-200`
 
 If numbering is irregular:
 - Preserve source order
@@ -48,9 +58,10 @@ Write the output in Markdown.
 
 Use this section structure:
 - `# Day XX CELPIP Vocabulary`
-- `## From 400_words.md`
-- `## From 200_vocab.md`
-- `## From 200_phrasal_verbs.md`
+- one source section only, depending on the current day:
+  - `## From 400_words.md`
+  - `## From 200_vocab.md`
+  - `## From 200_phrasal_verbs.md`
 
 For each entry, include only:
 - word or phrase
@@ -109,6 +120,10 @@ If the target day file already exists:
 - overwrite it only if the user explicitly asks to regenerate or update it
 - otherwise, read the existing file and continue from it
 
+When generating a day sheet under the new pacing:
+- do not mix entries from multiple source files in the same day
+- preserve the global study order across days: `400_words.md` first, then `200_vocab.md`, then `200_phrasal_verbs.md`
+
 ## Secondary Mode: Quiz From Saved Sheet
 
 If the user asks for a quiz:
@@ -140,7 +155,7 @@ For each word:
 1. prompt the word or phrase first
 2. ask the user for a confidence rating from `0` to `3`
 3. adapt the response based on the rating
-4. give the explanation, nuance, and example sentences together in one response, with explanation and nuance before examples
+4. give the explanation, nuance, useful patterns, useful contrasts, and example sentences together in one response, with explanation and nuance before examples
 5. include a short Chinese section for the meaning and nuance in the live teaching response
 6. continue refining only if the user says they still need help
 7. persist the explanation and useful examples into the day markdown before moving to the next word
@@ -160,7 +175,7 @@ Rating behavior:
 
 Conversation pattern:
 - first turn for a word: show only the word or phrase and ask for the `0-3` rating
-- second turn: provide the explanation matched to the rating, then the nuance, then the examples; include the short Chinese support for meaning and nuance when applicable
+- second turn: provide the explanation matched to the rating, then the nuance, then `Common patterns` and `Useful contrast` when they help, then the examples; include the short Chinese support for meaning and nuance when applicable
 - for rating `3`, do not expand into a longer teaching loop; one example is enough before saving
 - for rating `0`, `1`, or `2`, once that teaching response has been shown, the user may either respond in natural language or type `1` as a shortcut meaning "mark this word complete and go to the next one without persisting yet"
 - if the user still feels unsure, give one more simpler explanation or one more example, not a full essay
@@ -189,6 +204,10 @@ Use this structure under each studied entry:
   - Explanation: the clearest explanation that helped the user.
   - 中文意思: short Chinese support for the meaning.
   - 中文语感: short Chinese support for nuance or usage when helpful.
+  - Common patterns:
+    - useful collocation or sentence frame.
+  - Useful contrast:
+    - short contrast with a nearby word when helpful.
   - Examples:
     - original sheet example.
   - Usage note: only when needed.
@@ -203,6 +222,8 @@ Persistence content:
 - save the Chinese support lines by default when guided-study responses included them
 - save `中文意思` for every completed word studied with Chinese support
 - save `中文语感` when a nuance, contrast, or usage distinction was taught and it adds real learning value
+- save `Common patterns` when collocations or sentence frames were taught and they help active recall
+- save `Useful contrast` when a nearby word comparison was taught and it helps avoid confusion
 - keep the Chinese lines short and practical; do not turn the sheet into a long bilingual dictionary
 - when both explanation/nuance and examples are present, persist the explanation and Chinese support lines before the `Examples` section
 - number the word entries within each section as `1. 2. 3. ...`; do not number the internal notes under each word
@@ -212,6 +233,7 @@ Teaching style:
 - use simple English first
 - add short Chinese support only for meaning and nuance, not for every sentence
 - present explanation and nuance before examples in both the live response and saved notes
+- include `Common patterns` and `Useful contrast` only when they genuinely improve usage and memory
 - keep examples practical and CELPIP-friendly
 - prefer everyday contexts: work, school, housing, services, travel, opinions, scheduling, and problem solving
 - avoid dictionary-heavy or overly academic explanations
